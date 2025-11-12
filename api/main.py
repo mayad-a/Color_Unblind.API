@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -8,11 +7,7 @@ import io
 from daltonlens import simulate
 
 app = FastAPI()
-@app.get("/")
-def root():
-    return {"message": "FastAPI is running on Vercel!"}
 
-# Allow CORS (تعدلي القائمة لو عايزة دومين محدد بدل "*")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,15 +16,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ربط الأرقام بأنواع عمى الألوان
 cvd_types = {
-    1: simulate.Deficiency.PROTAN,  # protanopia
-    2: simulate.Deficiency.DEUTAN,  # deuteranopia
-    3: simulate.Deficiency.TRITAN,  # tritanopia
+    1: simulate.Deficiency.PROTAN,
+    2: simulate.Deficiency.DEUTAN,
+    3: simulate.Deficiency.TRITAN,
 }
 
 simulator = simulate.Simulator_Machado2009()
-
 
 def daltonize_simple(original, simulated):
     error = original.astype(int) - simulated.astype(int)
@@ -37,6 +30,10 @@ def daltonize_simple(original, simulated):
     corrected = np.clip(corrected, 0, 255).astype("uint8")
     return corrected
 
+# route رئيسي للتأكد أن الرابط الرئيسي شغال
+@app.get("/")
+def root():
+    return {"message": "FastAPI is running on Vercel!"}
 
 @app.post("/correct")
 async def correct_image(
