@@ -8,6 +8,9 @@ import io
 from daltonlens import simulate
 
 app = FastAPI()
+@app.get("/")
+def root():
+    return {"message": "FastAPI is running on Vercel!"}
 
 # Allow CORS (تعدلي القائمة لو عايزة دومين محدد بدل "*")
 app.add_middleware(
